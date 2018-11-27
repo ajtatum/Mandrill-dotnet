@@ -1,138 +1,185 @@
-﻿using System.Dynamic;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MandrillApi.cs" company="">
+//
+// </copyright>
+// <summary>
+//   Core class for using the MandrillApp Api
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System;
 using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using Mandrill.Models;
+using Mandrill.Requests;
 using Mandrill.Utilities;
-using RestSharp;
+using Newtonsoft.Json;
 
 namespace Mandrill
 {
+  /// <summary>
+  ///   Core class for using the MandrillApp Api
+  /// </summary>
+  public partial class MandrillApi : IDisposable
+  {
+    #region Constructors and Destructors
+
     /// <summary>
-    /// Core class for using the MandrillApp Api
+    ///   Initializes a new instance of the <see cref="MandrillApi" /> class.
     /// </summary>
-    public partial class MandrillApi
+    /// <param name="apiKey">
+    ///   The API Key recieved from MandrillApp
+    /// </param>
+    /// <param name="useHttps">
+    /// </param>
+    /// <param name="useStatic">
+    /// </param>
+    public MandrillApi(string apiKey, bool useHttps = true, bool useStatic = false)
     {
-        #region Properties
+      ApiKey = apiKey;
 
-        /// <summary>
-        /// The Api Key for the project received from the MandrillApp website
-        /// </summary>
-        public string ApiKey { get; private set; }
+      if (useHttps && useStatic)
+        baseUrl = Configuration.BASE_STATIC_SECURE_URL;
+      else if (useHttps && !useStatic)
+        baseUrl = Configuration.BASE_SECURE_URL;
+      else if (!useHttps && useStatic)
+        baseUrl = Configuration.BASE_STATIC_URL;
+      else
+        baseUrl = Configuration.BASE_URL;
 
-        #endregion Properties
+      // Store URL value to be used in public BaseURL property
+      BaseUrl = baseUrl;
 
-        #region Fields
-        /// <summary>
-        /// the main rest client for use throughout the whole app.
-        /// </summary>
-        private RestClient client;
-
-        #endregion Fields
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="apiKey">The API Key recieved from MandrillApp</param>
-        /// <param name="useSsl"></param>
-        public MandrillApi(string apiKey, bool useSsl = true)
-        {
-            ApiKey = apiKey;
-
-            if (useSsl)
-            {
-                client = new RestClient(Configuration.BASE_SECURE_URL);
-            }
-            else
-            {
-                client = new RestClient(Configuration.BASE_URL);
-            }            
-            client.AddHandler("application/json", new DynamicJsonDeserializer());
-        }
-
-        // CODEPATH IS DISABLED (USES EXECUTEASYNC). EXECUTE ASYNC HAS A BUG
-        //public Task<IRestResponse> PostAsync(string path, dynamic data)
-        //{
-        //    TaskCompletionSource<IRestResponse> tcs = new TaskCompletionSource<IRestResponse>();
-
-        //    var request = new RestRequest(path, Method.POST);
-        //    request.RequestFormat = DataFormat.Json;
-
-        //    if (data == null)
-        //    {
-        //        data = new ExpandoObject();
-        //    }
-
-        //    data.key = ApiKey;
-
-        //    request.AddBody(data);
-        //    client.ExecuteAsync(request, (response) =>
-        //    {
-        //        if (response.StatusCode != System.Net.HttpStatusCode.OK)
-        //        {
-        //            var error = JSON.Parse<ErrorResponse>(response.Content);
-        //            var ex = new MandrillException(error, string.Format("Post failed {0}", path));
-        //            tcs.SetException(ex);
-        //        }
-        //        else
-        //        {
-        //            tcs.SetResult(response);
-        //        }
-        //    });
-
-        //    return tcs.Task;
-        //}
-
-        /// <summary>
-        /// PostAsync (uses synchronous function right now because ExecuteAsync has a bug)
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public Task<IRestResponse> PostAsync(string path, dynamic data)
-        {
-            return Task.Factory.StartNew(() =>
-            {
-                var request = new RestRequest(path, Method.POST);
-                request.RequestFormat = DataFormat.Json;
-
-                if (data == null)
-                {
-                    data = new ExpandoObject();
-                }
-
-                data.key = ApiKey;
-
-                request.AddBody(data);
-
-                var response = client.Execute(request);
-
-                //if internal server error, then mandrill should return a custom error.
-                if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-                {
-                    var error = JSON.Parse<ErrorResponse>(response.Content);
-                    var ex = new MandrillException(error, string.Format("Post failed {0}", path));
-                    throw ex;
-                }
-                else if(response.StatusCode != HttpStatusCode.OK)
-                {
-                    //used to throw errors not returned from the server, such as no response, etc.
-                    throw response.ErrorException;
-                }
-                else
-                {
-                    return response;
-                }                
-            });
-        }
-
-        public Task<T> PostAsync<T>(string path, dynamic data) where T : new()
-        {
-            Task<IRestResponse> post = PostAsync(path, data);
-
-            return post.ContinueWith(p =>
-            {
-                T t = JSON.Parse<T>(p.Result.Content);
-                return t;
-            }, TaskContinuationOptions.ExecuteSynchronously);
-        }
+      _httpClient = new HttpClient
+      {
+          BaseAddress = new Uri(BaseUrl)
+      };
     }
+
+    #endregion
+
+    #region Private Methods and Operators
+
+    private static T ParseResponseContent<T>(string path, RequestBase data, string content,
+      HttpResponseMessage response)
+    {
+      if (response.StatusCode == HttpStatusCode.OK)
+        try
+        {
+          return JsonConvert.DeserializeObject<T>(content);
+        }
+        catch (JsonException ex)
+        {
+          throw new MandrillSerializationException($"Failed to deserialize content received from path: {path}.", ex)
+          {
+            HttpResponseMessage = response,
+            MandrillRequest = data,
+            Content = content
+          };
+        }
+
+      try
+      {
+        var error = JsonConvert.DeserializeObject<ErrorResponse>(content);
+
+        throw new MandrillException(error, $"Post failed: {path}")
+        {
+          HttpResponseMessage = response,
+          MandrillRequest = data
+        };
+      }
+      catch (JsonException ex)
+      {
+        throw new MandrillSerializationException($"Failed to deserialize error content received from path: {path}.", ex)
+        {
+          HttpResponseMessage = response,
+          MandrillRequest = data,
+          Content = content
+        };
+      }
+    }
+
+    #endregion
+
+    #region Fields
+
+    private readonly string baseUrl;
+
+    private HttpClient _httpClient;
+
+    #endregion
+
+    #region Public Properties
+
+    /// <summary>
+    ///   The Api Key for the project received from the MandrillApp website
+    /// </summary>
+    public string ApiKey { get; }
+
+    /// <Summary>
+    ///   The base URL value being used for call, useful for client logging purposes
+    /// </Summary>
+    public string BaseUrl { get; }
+
+    #endregion
+
+    #region Public Methods and Operators
+
+    /// <summary>
+    ///   Allows overriding the HttpClient which is used in Post()
+    /// </summary>
+    /// <param name="httpClient">the httpClient to use</param>
+    public void SetHttpClient(HttpClient httpClient)
+    {
+      _httpClient = httpClient;
+    }
+
+    /// <summary>
+    ///   Execute post to path
+    /// </summary>
+    /// <param name="path">the path to post to</param>
+    /// <param name="data">the payload to send in request body as json</param>
+    /// <returns></returns>
+    public async Task<T> Post<T>(string path, RequestBase data)
+    {
+      data.Key = ApiKey;
+      try
+      {
+
+          string requestContent;
+          try
+          {
+            requestContent = JSON.Serialize(data);
+          }
+          catch (JsonException ex)
+          {
+            throw new MandrillSerializationException("Failed to serialize request data.", ex);
+          }
+
+          var response =
+            await
+              _httpClient.PostAsync(
+                  path,
+                  new StringContent(requestContent, Encoding.UTF8, "application/json"))
+                .ConfigureAwait(false);
+
+          var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+          return ParseResponseContent<T>(path, data, responseContent, response);
+        }
+      catch (TimeoutException ex)
+      {
+        throw new TimeoutException(string.Format("Post timed out to {0}", path), ex);
+      }
+    }
+
+    public void Dispose()
+    {
+        ((IDisposable)_httpClient).Dispose();
+    }
+
+        #endregion
+  }
 }

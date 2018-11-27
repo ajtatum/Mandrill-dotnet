@@ -1,51 +1,110 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="JSON.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The json.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
-namespace Mandrill
+namespace Mandrill.Utilities
 {
-    public class JSON
+  /// <summary>
+  ///   The json.
+  /// </summary>
+  public class JSON
+  {
+    #region Static Fields
+
+    /// <summary>
+    ///   The settings.
+    /// </summary>
+    private static readonly JsonSerializerSettings settings = new JsonSerializerSettings
     {
-        private static JsonSerializerSettings settings = new JsonSerializerSettings()
+      ContractResolver = new CamelCasePropertyNamesContractResolver
+      {
+          NamingStrategy = new SnakeCaseNamingStrategy()
+      },
+      Converters =
+        new[]
         {
-            Converters = new[] { new IsoDateTimeConverter() },
-            DefaultValueHandling = DefaultValueHandling.Ignore,
-            NullValueHandling = NullValueHandling.Ignore,
-        }; 
+          new IsoDateTimeConverter
+            ()
+        },
+      DefaultValueHandling =
+        DefaultValueHandling
+          .Ignore,
+      NullValueHandling =
+        NullValueHandling
+          .Ignore,
+    };
 
-        public static dynamic Parse(string json)
-        {
-            return JsonConvert.DeserializeObject<dynamic>(json, settings);
-        }
+    #endregion
 
-        public static T Parse<T>(string json) where T : new()
-        {
-            if (json == null)
-            {
-                return new T();
-            }
-            else
-            {
-                try
-                {                    
-                    return JsonConvert.DeserializeObject<T>(json, settings);
-                }
-                catch (JsonReaderException)
-                {
-                    Trace.TraceWarning("Unable to parse JSON - {0}", json);
-                    return new T();
-                }
-            }
-        }
+    #region Public Methods and Operators
 
-        public static string Serialize(dynamic dyn)
-        {
-            return JsonConvert.SerializeObject(dyn, settings);
-        }
+    /// <summary>
+    ///   The parse.
+    /// </summary>
+    /// <param name="json">
+    ///   The json.
+    /// </param>
+    /// <returns>
+    ///   The <see cref="dynamic" />.
+    /// </returns>
+    public static dynamic Parse(string json)
+    {
+      return JsonConvert.DeserializeObject<dynamic>(json, settings);
     }
+
+    /// <summary>
+    ///   The parse.
+    /// </summary>
+    /// <param name="json">
+    ///   The json.
+    /// </param>
+    /// <typeparam name="T">
+    /// </typeparam>
+    /// <returns>
+    ///   The <see cref="T" />.
+    /// </returns>
+    public static T Parse<T>(string json) where T : new()
+    {
+      if (json == null)
+      {
+        return new T();
+      }
+
+      try
+      {
+        return JsonConvert.DeserializeObject<T>(json, settings);
+      }
+      catch (JsonReaderException)
+      {
+        Debug.WriteLine("Unable to parse JSON - {0}", json);
+        return new T();
+      }
+    }
+
+    /// <summary>
+    ///   The serialize.
+    /// </summary>
+    /// <param name="dyn">
+    ///   The dyn.
+    /// </param>
+    /// <returns>
+    ///   The <see cref="string" />.
+    /// </returns>
+    public static string Serialize(dynamic dyn)
+    {
+      return JsonConvert.SerializeObject(dyn, settings);
+    }
+
+    #endregion
+  }
 }

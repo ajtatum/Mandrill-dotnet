@@ -1,39 +1,148 @@
-﻿using System.Collections.Generic;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="SearchResult.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The search result state.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mandrill
+namespace Mandrill.Models
 {
-    public enum SearchResultState
-    {
-        Sent,
-        Bounced,
-        Rejected,
-        [EnumMember(Value = "soft-bounced")]
-        SoftBounced,
-        Spam,
-        Unsub
-    }
+  /// <summary>
+  ///   The search result state.
+  /// </summary>
+  public enum SearchResultState
+  {
+    /// <summary>
+    ///   The sent.
+    /// </summary>
+    Sent,
 
-    public class SearchResult
-    {
+    /// <summary>
+    ///   The bounced.
+    /// </summary>
+    Bounced,
 
-        public int ts { get; set; }
-        public string _id { get; set; }
-        public string sender { get; set; }
-        public string subject { get; set; }
-        public string email { get; set; }
-        public string[] tags { get; set; }
-        public int opens { get; set; }
-        public int clicks { get; set; }
+    /// <summary>
+    ///   The rejected.
+    /// </summary>
+    Rejected,
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public SearchResultState state { get; set; }
+    /// <summary>
+    ///   The soft bounced.
+    /// </summary>
+    [EnumMember(Value = "soft-bounced")] SoftBounced,
 
-        public Dictionary<string, string> metadata { get; set; }
+    /// <summary>
+    ///   The spam.
+    /// </summary>
+    Spam,
 
-        public string diag { get; set; }
-        public string bounce_description { get; set; }
-    }
+    /// <summary>
+    ///   The unsub.
+    /// </summary>
+    Unsub,
+
+    /// <summary>
+    ///   The deferred.
+    /// </summary>
+    Deferred
+  }
+
+  /// <summary>
+  ///   The search result.
+  /// </summary>
+  public class SearchResult
+  {
+    #region Public Properties
+
+    /// <summary>
+    ///   Gets or sets the _id.
+    /// </summary>
+    [JsonProperty("_id")]
+    public string Id { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the bounce_description.
+    /// </summary>
+    public string BounceDescription { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the clicks.
+    /// </summary>
+    public int Clicks { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the diag.
+    /// </summary>
+    public string Diag { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the email.
+    /// </summary>
+    public string Email { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the metadata.
+    /// </summary>
+    public Dictionary<string, string> Metadata { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the opens.
+    /// </summary>
+    public int Opens { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the sender.
+    /// </summary>
+    public string Sender { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the smtp_events.
+    /// </summary>
+    public IEnumerable<SmtpEvent> SmtpEvents { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the state.
+    /// </summary>
+    [JsonConverter(typeof (StringEnumConverter))]
+    public SearchResultState State { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the subject.
+    /// </summary>
+    public string Subject { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the tags.
+    /// </summary>
+    public string[] Tags { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the ts.
+    /// </summary>
+    public long Ts { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the open details.
+    /// </summary>
+    /// <value>The open details.</value>
+    [JsonProperty("opens_detail")]
+    public IEnumerable<OpenDetail> OpenDetails { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the click details.
+    /// </summary>
+    /// <value>The click details.</value>
+    [JsonProperty("clicks_detail")]
+    public IEnumerable<ClickDetail> ClickDetails { get; set; }
+
+    #endregion
+  }
 }

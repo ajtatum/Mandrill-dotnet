@@ -1,73 +1,56 @@
 # Mandrill Dot Net
 
+[![NuGet](http://img.shields.io/nuget/v/Mandrill.svg?style=flat-square)](https://www.nuget.org/packages/Mandrill/)
+[![Build Status](https://img.shields.io/appveyor/ci/shawnmclean/mandrill-dotnet.svg?style=flat-square)](https://ci.appveyor.com/project/shawnmclean/mandrill-dotnet)
+
 ## NuGet
 
 Visual Studio users can install this directly into their .NET projects by executing the following command in the [Package Manager Console](http://docs.nuget.org/docs/start-here/using-the-package-manager-console)
 
     PM> Install-Package Mandrill
 
-To utilize the mono build, download and compile the project. The mono version will be up on NuGet soon.
 
 ## Description
 
-Mandrill Dot Net is a library that wraps the [Mandrill](http://mandrill.com/) mail API to easily get started in sending mail. It contains methods that
-accept just the minimal amount of strongly typed parameters required to start sending out emails. All API calls have their Async counterparts.
+Mandrill Dot Net is a library that wraps the [Mandrill](http://mandrill.com/) mail API to easily get started in sending mail. It contains methods that accepts requests that matches the structure of the Mandrill API docs. Required properties are accepted in the Request's constructor.
 
 ## Usage
 
-Go to the [downloads page](https://github.com/shawnmclean/Mandrill-dotnet/downloads) and download the latest version or utilize the NuGet package.
-Unzip the file files and reference the following file in your .net project:
+Reference the `Mandrill.dll` library in your project or download from NuGet.
 
-	Mandrill.dll
+#### Api Docs
 
-#### Sample Source:
+[https://mandrillapp.com/api/docs/](https://mandrillapp.com/api/docs/)
 
-Synchronous:
-
-    MandrillApi api = new MandrillApi("xxxxx-xxxx-xxxx-xxxx");
-    UserInfo info = api.UserInfo();
-    Console.WriteLine(info.reputation);
-
-Asychronous:
+#### Example
 
     MandrillApi api = new MandrillApi("xxxxx-xxxx-xxxx-xxxx");
-    var task= api.UserInfoAsyc();
+    UserInfo info = await api.UserInfo();
+    Console.WriteLine(info.Reputation);
 
-    task.ContinueWith(data =>
-    {
-        var userInfo = data.Result;
-        Console.WriteLine(userInfo.reputation);
-    });
+All endpoints are covered by integration tests and can be used as a reference.
 
-## Api methods Covered
-
- 1. Users
-   1. Info
-   2. Ping
- 2. Messages
-   1. Send
-   2. Send-Template
-   3. Search
- 3. Rejects
-   1. List
-   2. Delete
- 4. Templates
-   1. Render
-	
 ## Necessary prerequisites
 
-.NET 4 or Mono
+### Net Core / NetStandard
+
+Mandrill.net now supports these platforms.
+
+### .NET 4.5
+
+This wrapper uses async and await, hence the dependency on .NET 4.5.
+
+### .NET 4
+
+Support for .NET 4 has be dropped. The last build for .NET 4 is the NuGet version `1.3.1`. The code can be found on tag [.net-4.0](https://github.com/shawnmclean/Mandrill-dotnet/tree/net-4.0).
+Async and Sync methods were merged into using the async pattern as suggested as [best practice](http://blogs.msdn.com/b/pfxteam/archive/2012/04/13/10293638.aspx) by the parallel programming team at microsoft.
 
 ## Contributing
 
 #### Building the source
 
-The source can be built from the rake task `rake build` or using visual studio. If using rake, ensure `albacore`
-and `version_bumper` gems are installed. Rename `rakefile.config.example.rb` to `rakefile.config.rb`. 
+Integration Tests are currently being re-written in xunit with the new .net core support.
 
-For running tests, ensure to rename `AppSettings.example.config` to `AppSettings.config` and 
-set your own Api Key in the test project. Tests can be executed from rake: `rake test` or from any nunit test runner
-tool.
 
 #### Contributors
 
@@ -76,3 +59,5 @@ tool.
   3. [Maksymilian Majer](https://github.com/maksymilian-majer)
   4. [Moacyr Rodrigues Pereira](https://github.com/moacyr)
   5. [Stephen Jazdzewski](https://github.com/jazd)
+  6. [Jacob Rillema](https://github.com/rillemjg)
+  7. [Chad Tolkien](https://github.com/ctolkien)

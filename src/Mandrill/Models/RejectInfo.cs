@@ -1,33 +1,104 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="RejectInfo.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The reject info.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+using System;
 using Newtonsoft.Json;
 
-namespace Mandrill
+namespace Mandrill.Models
 {
-    public class RejectInfo
-    {
-        [JsonProperty("email")]
-        public string Email { get; set; }
-        
-        [JsonProperty("reason")]
-        public string Reason { get; set; }
+  /// <summary>
+  ///   The reject info.
+  /// </summary>
+  public class RejectInfo
+  {
+    #region Public Properties
 
-        [JsonProperty("created_at")]
-        public string CreatedAt { get; set; }
+    /// <summary>
+    ///   Gets or sets the created at.
+    /// </summary>
+    public string CreatedAt { get; set; }
 
-        [JsonProperty("expires_at")]
-        public string ExpiresAt { get; set; }
+    /// <summary>
+    ///   Gets or sets the email.
+    /// </summary>
+    public string Email { get; set; }
 
-        [JsonProperty("expired")]
-        public bool Expired { get; set; }
-        
-        //TODO: Add property: Sender: "Sender":{"...": "..."}
-    }
+    /// <summary>
+    ///   Gets or sets a value indicating whether expired.
+    /// </summary>
+    public bool Expired { get; set; }
 
-    public class RejectDeleteResult
-    {
-        [JsonProperty("email")]
-        public string Email { get; set; }
+    /// <summary>
+    ///   Gets or sets the expires at.
+    /// </summary>
+    public string ExpiresAt { get; set; }
 
-        [JsonProperty("deleted")]
-        public bool Deleted { get; set; }
-    }
+    /// <summary>
+    ///   Gets or sets the expires at.
+    /// </summary>
+    public DateTime LastEventAt { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the reason.
+    /// </summary>
+    public string Reason { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the reason.
+    /// </summary>
+    public string Detail { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the reason.
+    /// </summary>
+    public Sender Sender { get; set; }
+
+    #endregion
+  }
+
+  /// <summary>
+  ///   The reject add result.
+  /// </summary>
+  public class RejectAddResult
+  {
+    #region Public Properties
+
+    /// <summary>
+    ///   Gets or sets a value indicating whether added.
+    /// </summary>
+    public bool Added { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the email.
+    /// </summary>
+    public string Email { get; set; }
+
+    #endregion
+  }
+
+  /// <summary>
+  ///   The reject delete result.
+  /// </summary>
+  public class RejectDeleteResult
+  {
+    #region Public Properties
+
+    /// <summary>
+    ///   Gets or sets a value indicating whether deleted.
+    /// </summary>
+    public bool Deleted { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the email.
+    /// </summary>
+    public string Email { get; set; }
+
+    #endregion
+  }
 }

@@ -1,31 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.26711.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ACA85DEE-F68F-45DD-9435-14755FFBFDC9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EF2B1A8B-ED3A-45DB-AA2D-432CB44049B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mandrill.Tests", "tests\Mandrill.Tests.csproj", "{0675EF0D-79F9-473A-ABF4-B2F1B22843C9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{45609E63-CCF9-4A89-BAFE-0BE96C303BF4}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
 		LICENSE.txt = LICENSE.txt
-		rakefile.config.rb = rakefile.config.rb
-		Rakefile.rb = Rakefile.rb
 		README.md = README.md
-		VERSION = VERSION
+		UpdateVersion.ps1 = UpdateVersion.ps1
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mandrill", "src\Mandrill\Mandrill.csproj", "{0563EE3C-A65E-4D55-9302-7663C0FE77F7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{96D95B6A-9FB1-40B3-949B-0B9D1D6BF429}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{67E7C3E4-5527-4D1F-B29B-75736E0411DE}"
 	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
+		scripts\TokenizeConfiguration.ps1 = scripts\TokenizeConfiguration.ps1
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mandrill.Mono", "src\Mandrill.Mono\Mandrill.Mono.csproj", "{728FE7F9-213E-47C6-BF9F-9D762BD7EB62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mandrill", "src\Mandrill\Mandrill.csproj", "{F906713E-71C4-41A9-9F4B-EE1EB9F33AEF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mandrill.Tests", "tests\Mandrill.Tests\Mandrill.Tests.csproj", "{FAEAD1E5-40DE-4A7B-8ADB-2ACE6384F92D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,24 +30,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0675EF0D-79F9-473A-ABF4-B2F1B22843C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0675EF0D-79F9-473A-ABF4-B2F1B22843C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0675EF0D-79F9-473A-ABF4-B2F1B22843C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0675EF0D-79F9-473A-ABF4-B2F1B22843C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0563EE3C-A65E-4D55-9302-7663C0FE77F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0563EE3C-A65E-4D55-9302-7663C0FE77F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0563EE3C-A65E-4D55-9302-7663C0FE77F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0563EE3C-A65E-4D55-9302-7663C0FE77F7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{728FE7F9-213E-47C6-BF9F-9D762BD7EB62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{728FE7F9-213E-47C6-BF9F-9D762BD7EB62}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{728FE7F9-213E-47C6-BF9F-9D762BD7EB62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F906713E-71C4-41A9-9F4B-EE1EB9F33AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F906713E-71C4-41A9-9F4B-EE1EB9F33AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F906713E-71C4-41A9-9F4B-EE1EB9F33AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F906713E-71C4-41A9-9F4B-EE1EB9F33AEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAEAD1E5-40DE-4A7B-8ADB-2ACE6384F92D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAEAD1E5-40DE-4A7B-8ADB-2ACE6384F92D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAEAD1E5-40DE-4A7B-8ADB-2ACE6384F92D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAEAD1E5-40DE-4A7B-8ADB-2ACE6384F92D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{0563EE3C-A65E-4D55-9302-7663C0FE77F7} = {ACA85DEE-F68F-45DD-9435-14755FFBFDC9}
-		{728FE7F9-213E-47C6-BF9F-9D762BD7EB62} = {ACA85DEE-F68F-45DD-9435-14755FFBFDC9}
-		{0675EF0D-79F9-473A-ABF4-B2F1B22843C9} = {EF2B1A8B-ED3A-45DB-AA2D-432CB44049B0}
+		{F906713E-71C4-41A9-9F4B-EE1EB9F33AEF} = {ACA85DEE-F68F-45DD-9435-14755FFBFDC9}
+		{FAEAD1E5-40DE-4A7B-8ADB-2ACE6384F92D} = {EF2B1A8B-ED3A-45DB-AA2D-432CB44049B0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {687A6EAF-62AE-4A48-ABB1-0ADAC11600A3}
 	EndGlobalSection
 EndGlobal

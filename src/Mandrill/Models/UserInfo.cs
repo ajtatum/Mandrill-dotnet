@@ -1,43 +1,163 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="UserInfo.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The stats.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
-namespace Mandrill
+using Newtonsoft.Json;
+
+namespace Mandrill.Models
 {
-    public struct stats
-    {
-        public UserInfoStats today;
-        public UserInfoStats last_7_days;
-        public UserInfoStats last_30_days;
-        public UserInfoStats last_60_days;
-        public UserInfoStats last_90_days;
-        public UserInfoStats all_time;
-    }
+  /// <summary>
+  ///   The stats.
+  /// </summary>
+  public class Stats
+  {
+    #region Fields
 
-    public struct UserInfoStats
-    {
-        public int sent;
-        public int hard_bounces;
-        public int soft_bounces;
-        public int rejects;
-        public int complaints;
-        public int unsubs;
-        public int opens;
-        public int unique_opens;
-        public int clicks;
-        public int unique_clicks;
-    }
+    /// <summary>
+    ///   The all_time.
+    /// </summary>
+    [JsonProperty("all_time")]
+    public UserInfoStats AllTime { get; set; }
 
-    public class UserInfo
-    {
-        public string username { get; set; }
-        public string created_at { get; set; }
-        public string public_id { get; set; }
-        public int reputation { get; set; }
-        public int hourly_quota { get; set; }
-        public int backlog { get; set; }
-        public stats stats { get; set; }
-    }
+    /// <summary>
+    ///   The last_30_days.
+    /// </summary>
+    [JsonProperty("last_30_days")]
+    public UserInfoStats Last30Days { get; set; }
+
+    /// <summary>
+    ///   The last_60_days.
+    /// </summary>
+    [JsonProperty("last_60_days")]
+    public UserInfoStats Last60Days { get; set; }
+
+    /// <summary>
+    ///   The last_7_days.
+    /// </summary>
+    [JsonProperty("last_7_days")]
+    public UserInfoStats Last7Days { get; set; }
+
+    /// <summary>
+    ///   The last_90_days.
+    /// </summary>
+    [JsonProperty("last_90_days")]
+    public UserInfoStats Last90Days { get; set; }
+
+    /// <summary>
+    ///   The today.
+    /// </summary>
+    public UserInfoStats Today { get; set; }
+
+    #endregion
+  }
+
+  /// <summary>
+  ///   The user info stats.
+  /// </summary>
+  public class UserInfoStats
+  {
+    #region Fields
+
+    /// <summary>
+    ///   The clicks.
+    /// </summary>
+    public int Clicks { get; set; }
+
+    /// <summary>
+    ///   The complaints.
+    /// </summary>
+    public int Complaints { get; set; }
+
+    /// <summary>
+    ///   The hard_bounces.
+    /// </summary>
+    public int HardBounces { get; set; }
+
+    /// <summary>
+    ///   The opens.
+    /// </summary>
+    public int Opens { get; set; }
+
+    /// <summary>
+    ///   The rejects.
+    /// </summary>
+    public int Rejects { get; set; }
+
+    /// <summary>
+    ///   The sent.
+    /// </summary>
+    public int Sent { get; set; }
+
+    /// <summary>
+    ///   The soft_bounces.
+    /// </summary>
+    public int SoftBounces { get; set; }
+
+    /// <summary>
+    ///   The unique_clicks.
+    /// </summary>
+    public int UniqueClicks { get; set; }
+
+    /// <summary>
+    ///   The unique_opens.
+    /// </summary>
+    public int UniqueOpens { get; set; }
+
+    /// <summary>
+    ///   The unsubs.
+    /// </summary>
+    public int Unsubs { get; set; }
+
+    #endregion
+  }
+
+  /// <summary>
+  ///   The user info.
+  /// </summary>
+  public class UserInfo
+  {
+    #region Public Properties
+
+    /// <summary>
+    ///   Gets or sets the backlog.
+    /// </summary>
+    public int Backlog { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the created_at.
+    /// </summary>
+    public string CreatedAt { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the hourly_quota.
+    /// </summary>
+    public int HourlyQuota { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the public_id.
+    /// </summary>
+    public string PublicId { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the reputation.
+    /// </summary>
+    public int Reputation { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the stats.
+    /// </summary>
+    public Stats Stats { get; set; }
+
+    /// <summary>
+    ///   Gets or sets the username.
+    /// </summary>
+    public string Username { get; set; }
+
+    #endregion
+  }
 }

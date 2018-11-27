@@ -1,10 +1,28 @@
-﻿using System;
-using System.Text;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="RenderedTemplate.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The rendered template.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+using Newtonsoft.Json;
 
 namespace Mandrill.Models
 {
-    public class RenderedTemplate
-    {
-        public string html { get; set; }
-    }
+  /// <summary>
+  ///   The rendered template.
+  /// </summary>
+  public class RenderedTemplate
+  {
+    #region Public Properties
+
+    /// <summary>
+    ///   Gets or sets the html.
+    /// </summary>
+    public string Html { get; set; }
+
+    #endregion
+  }
 }

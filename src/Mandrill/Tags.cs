@@ -1,11 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Tags.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The mandrill api.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace Mandrill
 {
-    public partial class MandrillApi
-    {
-    }
+  /// <summary>
+  ///   The mandrill api.
+  /// </summary>
+  public partial class MandrillApi
+  {
+  }
 }

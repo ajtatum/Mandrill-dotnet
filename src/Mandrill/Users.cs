@@ -1,63 +1,57 @@
-﻿using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Users.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The mandrill api.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 using System.Threading.Tasks;
-using RestSharp;
+using Mandrill.Models;
+using Mandrill.Requests;
 
 namespace Mandrill
 {
-    public partial class MandrillApi
+  /// <summary>
+  ///   The mandrill api.
+  /// </summary>
+  public partial class MandrillApi
+  {
+    #region Public Methods and Operators
+
+    /// <summary>
+    ///   Validate an API key and respond to a ping
+    /// </summary>
+    /// <returns>
+    ///   The <see cref="string" />.
+    /// </returns>
+    /// <see cref="https://mandrillapp.com/api/docs/users.JSON.html#method=ping"/>
+    public async Task<string> Ping()
     {
-        public UserInfo UserInfo()
-        {
-            try
-            {
-                return UserInfoAsync().Result;
-            }
-            catch (AggregateException aex)
-            {
-                //catch and throw the inner exception
-                throw aex.Flatten().InnerException;
-            }
-        }
+      var path = "users/ping.json";
 
-        /// <summary>
-        /// Return the information about the API-connected user
-        /// </summary>
-        /// <returns></returns>
-        /// <see cref="https://mandrillapp.com/api/docs/users.html#method=info"/>
-        public Task<UserInfo> UserInfoAsync()
-        {
-            var path = "/users/info.json";
-            return PostAsync<UserInfo>(path, null);
-        }
+      var response = await Post<string>(path, new RequestBase()).ConfigureAwait(false);
 
-        /// <summary>
-        /// Validate an API key and respond to a ping
-        /// </summary>
-        /// <returns></returns>
-        public string Ping()
-        {
-            try
-            {
-                return PingAsync().Result;
-            }
-            catch(AggregateException aex)
-            {
-                //catch and throw the inner exception
-                throw aex.Flatten().InnerException;
-            }
-        }
-
-        /// <summary>
-        /// Validate an API key and respond to a ping
-        /// </summary>
-        /// <returns></returns>
-        public Task<string> PingAsync()
-        {
-            var path = "/users/ping.json";
-            return PostAsync(path, null).ContinueWith(p =>
-            {
-               return p.Result.Content;
-            });
-        }
+      return response;
     }
+
+    /// <summary>
+    ///   Return the information about the API-connected user
+    /// </summary>
+    /// <returns>
+    ///   The <see cref="UserInfo" />.
+    /// </returns>
+    /// <see cref="https://mandrillapp.com/api/docs/users.html#method=info" />
+    public Task<UserInfo> UserInfo()
+    {
+      var path = "users/info.json";
+
+      var response = Post<UserInfo>(path, new RequestBase());
+
+      return response;
+    }
+
+    #endregion
+  }
 }
